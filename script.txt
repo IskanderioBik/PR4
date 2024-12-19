@@ -1,0 +1,197 @@
+CREATE SEQUENCE bikmullin_225_doctors_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 32767
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE bikmullin_225_doctors_id_seq OWNER TO postgres;
+GRANT ALL ON SEQUENCE bikmullin_225_doctors_id_seq TO postgres;
+
+-- DROP SEQUENCE bikmullin_225_patient_id_seq;
+
+CREATE SEQUENCE bikmullin_225_patient_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE bikmullin_225_patient_id_seq OWNER TO postgres;
+GRANT ALL ON SEQUENCE bikmullin_225_patient_id_seq TO postgres;
+
+-- DROP SEQUENCE bikmullin_225_reception_id_seq;
+
+CREATE SEQUENCE bikmullin_225_reception_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE bikmullin_225_reception_id_seq OWNER TO postgres;
+GRANT ALL ON SEQUENCE bikmullin_225_reception_id_seq TO postgres;
+
+-- DROP SEQUENCE bikmullin_225_specialty_id_seq;
+
+CREATE SEQUENCE bikmullin_225_specialty_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 32767
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE bikmullin_225_specialty_id_seq OWNER TO postgres;
+GRANT ALL ON SEQUENCE bikmullin_225_specialty_id_seq TO postgres;
+-- public.bikmullin_225_patient определение
+
+-- Drop table
+
+-- DROP TABLE bikmullin_225_patient;
+
+CREATE TABLE bikmullin_225_patient (
+	id serial4 NOT NULL,
+	first_name varchar NULL,
+	name_ varchar NULL,
+	last_name varchar NULL,
+	birthday date NULL,
+	address varchar NULL,
+	CONSTRAINT bikmullin_225_patient_pkey PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE bikmullin_225_patient OWNER TO postgres;
+GRANT ALL ON TABLE bikmullin_225_patient TO postgres;
+
+
+-- public.bikmullin_225_specialty определение
+
+-- Drop table
+
+-- DROP TABLE bikmullin_225_specialty;
+
+CREATE TABLE bikmullin_225_specialty (
+	id smallserial NOT NULL,
+	name_ varchar NULL,
+	CONSTRAINT bikmullin_225_specialty_pkey PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE bikmullin_225_specialty OWNER TO postgres;
+GRANT ALL ON TABLE bikmullin_225_specialty TO postgres;
+
+
+-- public.bikmullin_225_doctors определение
+
+-- Drop table
+
+-- DROP TABLE bikmullin_225_doctors;
+
+CREATE TABLE bikmullin_225_doctors (
+	id smallserial NOT NULL,
+	first_name varchar NULL,
+	name_ varchar NULL,
+	last_name varchar NULL,
+	percentage numeric(3, 2) NULL,
+	id_specialty int4 NOT NULL,
+	CONSTRAINT bikmullin_225_doctors_pkey PRIMARY KEY (id),
+	CONSTRAINT bikmullin_225_doctors_id_specialty_fkey FOREIGN KEY (id_specialty) REFERENCES bikmullin_225_specialty(id)
+);
+
+-- Permissions
+
+ALTER TABLE bikmullin_225_doctors OWNER TO postgres;
+GRANT ALL ON TABLE bikmullin_225_doctors TO postgres;
+
+
+-- public.bikmullin_225_reception определение
+
+-- Drop table
+
+-- DROP TABLE bikmullin_225_reception;
+
+CREATE TABLE bikmullin_225_reception (
+	id serial4 NOT NULL,
+	id_patient int4 NOT NULL,
+	id_doctors int4 NOT NULL,
+	price money NULL,
+	data_ date NULL,
+	CONSTRAINT bikmullin_225_reception_pkey PRIMARY KEY (id),
+	CONSTRAINT bikmullin_225_reception_id_doctors_fkey FOREIGN KEY (id_doctors) REFERENCES bikmullin_225_doctors(id),
+	CONSTRAINT bikmullin_225_reception_id_patient_fkey FOREIGN KEY (id_patient) REFERENCES bikmullin_225_patient(id)
+);
+
+-- Permissions
+
+ALTER TABLE bikmullin_225_reception OWNER TO postgres;
+GRANT ALL ON TABLE bikmullin_225_reception TO postgres;
+
+
+
+
+-- Permissions
+
+GRANT ALL ON SCHEMA public TO pg_database_owner;
+GRANT USAGE ON SCHEMA public TO public;
+
+INSERT INTO bikmullin_225_specialty (id,name_) VALUES
+	 (1,'Педиатр'),
+	 (2,'Отоларинголог'),
+	 (3,'Невролог'),
+	 (4,'Психиатр'),
+	 (5,'Психиатр-нарколог'),
+	 (6,'Уролог'),
+	 (7,'Венеролог'),
+	 (8,'Ветеринар'),
+	 (9,'Дерматолог'),
+	 (10,'Логопед');
+	
+INSERT INTO bikmullin_225_doctors (id,first_name,name_,last_name,percentage,id_specialty) VALUES
+	 (1,'Дегтярева','Александра','Викторовна',0.50,1),
+	 (2,'Смирнов','Владислав','Матвеевич',0.49,2),
+	 (3,'Ермолаева','Маргарита','Андреевна',0.48,3),
+	 (4,'Баранов','Захар','Матвеевич',0.47,4),
+	 (5,'Митрофанов','Константин','Никитич',0.46,5),
+	 (6,'Гаврилов','Андрей','Арсентьевич',0.45,6),
+	 (7,'Бурова','София','Ивановна',0.44,7),
+	 (8,'Яковлева','Арина','Семёновна',0.50,8),
+	 (9,'Черкасова','Агата','Кирилловна',0.45,9),
+	 (10,'Сальников','Дмитрий','Богданович',0.48,10);
+	
+INSERT INTO bikmullin_225_patient (id,first_name,name_,last_name,birthday,address) VALUES
+	 (1,'Иванов','Никита','Александрович','2000-06-12','Тверская область, город Щёлково, ул. Бухарестская, 66'),
+	 (2,'Горшкова','Алёна','Макаровна','2000-02-16','Челябинская область, город Шатура, въезд Сталина, 54'),
+	 (3,'Емельянова','Кристина','Михайловна','2012-09-20','Новосибирская область, город Видное, шоссе Чехова, 26'),
+	 (4,'Смирнова','Надежда','Саввична','2002-01-01','Липецкая область, город Пушкино, проезд Домодедовская, 09'),
+	 (5,'Григорьева','Лада','Борисовна','2006-08-25','Калужская область, город Дорохово, пр. Балканская, 10'),
+	 (6,'Денисов','Демид','Арсентьевич','2004-06-06','Калужская область, город Шаховская, ул. Домодедовская, 81'),
+	 (7,'Щербакова','Ангелина','Константиновна','2002-05-05','Псковская область, город Сергиев Посад, наб. Косиора, 07'),
+	 (8,'Самойлов','Данила','Юрьевич','2007-07-07','Белгородская область, город Егорьевск, пл. Космонавтов, 82'),
+	 (9,'Петров','Ярослав','Ярославович','2005-03-13','Ленинградская область, город Красногорск, шоссе Чехова, 03'),
+	 (10,'Новикова','Василиса','Данииловна','2002-06-22','Рязанская область, город Раменское, въезд Гагарина, 54');
+	
+INSERT INTO bikmullin_225_reception (id,id_patient,id_doctors,price,data_) VALUES
+	 (1,1,1,4567,'2024-06-20'),
+	 (2,2,2,1245,'2024-04-15'),
+	 (3,3,3,5678,'2024-12-06'),
+	 (4,4,4,2412,'2024-05-18'),
+	 (5,5,5,8721,'2024-09-12'),
+	 (6,6,6,9751,'2024-03-06'),
+	 (7,7,7,1578,'2024-01-27'),
+	 (8,8,8,8754,'2024-07-04'),
+	 (9,9,9,8622,'2024-10-14'),
+	 (10,10,10,9500,'2024-11-11');
